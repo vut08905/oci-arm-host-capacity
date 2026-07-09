@@ -46,14 +46,8 @@ jobs:
 
       - name: Run hunt loop
         run: |
-          for i in $(seq 1 55); do
-            echo "===== Attempt $i / 55 ====="
-            OUT=$(php ./index.php 2>&1)
-            echo "$OUT"
-            if echo "$OUT" | grep -qi 'out of host capacity'; then
-              sleep 50
-            else
-              echo "No capacity error - stopping loop."
-              break
-            fi
+          for i in $(seq 1 45); do
+            echo "===== Attempt $i / 45 ====="
+            php ./index.php 2>&1 || true
+            sleep 55
           done
