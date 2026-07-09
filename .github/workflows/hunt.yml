@@ -2,8 +2,12 @@ name: Hunt ARM
 
 on:
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '0 * * * *'
   workflow_dispatch:
+
+concurrency:
+  group: hunt-arm
+  cancel-in-progress: false
 
 jobs:
   create-arm:
@@ -40,5 +44,16 @@ jobs:
           CACHE_AVAILABILITY_DOMAINS=1
           EOF
 
-      - name: Run hunt
-        run: php ./index.php
+      - name: Run hunt loop
+        run: |
+          for i in $(seq 1 55); do
+            echo "===== Attempt $i / 55 ====="
+            OUT=$(php ./index.php 2>&1)
+            echo "$OUT"
+            if echo "$OUT" | grep -qi 'out of host capacity'; then
+              sleep 50
+            else
+              echo "No capacity error - stopping loop."
+              break
+            fi
+          done
