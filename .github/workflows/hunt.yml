@@ -46,8 +46,8 @@ jobs:
 
       - name: Run hunt loop
         run: |
-          for i in $(seq 1 45); do
-            echo "===== Attempt $i / 45 ====="
+          for i in $(seq 1 20); do
+            echo "===== Attempt $i / 20 (moi 2 phut) ====="
             php ./index.php 2>&1 || true
-            sleep 55
+            sleep 120
           done
